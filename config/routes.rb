@@ -1,4 +1,28 @@
 Rails.application.routes.draw do
+  resources :battles do
+    member do
+      get 'index'
+
+      get 'new'
+      post 'create'
+
+      get 'show'
+      post 'update'
+    end
+    resources :teams do
+      member do
+        get 'index'
+
+        get 'new'
+        post 'create'
+
+        get 'show'
+      end
+    end
+  end
+
+  root 'battles#index'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
