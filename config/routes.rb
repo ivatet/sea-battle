@@ -1,21 +1,27 @@
 Rails.application.routes.draw do
   resources :battles do
     member do
+      # show all vacant games
       get 'index'
 
+      # create a new game (protected by captcha)
       get 'new'
       post 'create'
 
+      # implement the game flow
       get 'show'
       post 'update'
     end
     resources :teams do
       member do
+        # show all candidates to the game creator
         get 'index'
 
+        # join a game (protected by captcha ONLY for joiner)
         get 'new'
         post 'create'
 
+        # wait for approval for joiner
         get 'show'
       end
     end
