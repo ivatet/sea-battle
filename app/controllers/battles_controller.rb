@@ -1,12 +1,10 @@
 class BattlesController < ApplicationController
   def index
     @vacant_battles = Battle
-      .select("battles.id,
-               battles.battle_name,
-               COUNT(CASE WHEN teams.is_approved = 't' THEN 1 ELSE NULL END) AS cnt")
-      .joins(:teams)
+      .select("battles.id, battles.battle_name")
+      .joins("LEFT JOIN teams ON battles.id = teams.battle_id")
       .group("battles.id")
-      .having("cnt < 2")
+      .having("COUNT(CASE WHEN teams.is_approved = ? THEN 1 END) < 2", true)
 
     @ongoing_battles = []
   end
