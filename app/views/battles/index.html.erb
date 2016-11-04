@@ -1,1 +1,23 @@
-<p>#index</p>
+<h1>Vacant battles</h1>
+<table>
+  <tr>
+    <th>Battle</th>
+  </tr>
+  <% @vacant_battles.each do |b| %>
+  <tr>
+    <td><%= b.battle_name %></td>
+  </tr>
+  <% end %>
+</table>
+
+<h1>Ongoing battles</h1>
+<table>
+  <tr>
+    <th>Battle</th>
+  </tr>
+  <% @ongoing_battles.each do |b| %>
+  <tr>
+    <td></td>
+  </tr>
+  <% end %>
+</table>

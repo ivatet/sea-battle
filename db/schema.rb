@@ -15,22 +15,22 @@ ActiveRecord::Schema.define(version: 20161030172110) do
 
   create_table "battles", force: :cascade do |t|
     t.string   "battle_name"
+    t.string   "creator_uuid"
     t.integer  "team_id"
-    t.integer  "turn_number", default: 0
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "turn_number",  default: 0
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "teams", force: :cascade do |t|
     t.integer  "battle_id"
     t.string   "player_uuid"
-    t.string   "cached_player_name"
-    t.boolean  "is_approved",        default: false
+    t.boolean  "is_approved",      default: false
     t.string   "boat_arrangement"
     t.string   "opponent_field"
-    t.integer  "boat_cnt",           default: 10
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.integer  "boat_cnt",         default: 10
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
 end

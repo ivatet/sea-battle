@@ -9,9 +9,5 @@ class ApplicationController < ActionController::Base
     if not session.key?(:player_uuid)
       session[:player_uuid] = SecureRandom.uuid
     end
-
-    if not session.key?(:player_name)
-      session[:player_name] = [:Oliver, :Jack, :Harry, :Jacob, :Charlie].sample
-    end
   end
 end

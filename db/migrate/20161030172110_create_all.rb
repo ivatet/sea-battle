@@ -4,6 +4,9 @@ class CreateAll < ActiveRecord::Migration
       # just a name given by the game creator
       t.string :battle_name
 
+      # the game creator which will be approved by default
+      t.string :creator_uuid
+
       # who the next turn belongs to
       t.belongs_to :team
 
@@ -19,10 +22,6 @@ class CreateAll < ActiveRecord::Migration
 
       # player UUID is originally stored in cookies
       t.string :player_uuid
-
-      # the only way to get opponent's name (which is also stored in opponent's
-      # cookies) is to cache it locally
-      t.string :cached_player_name
 
       # the game creator should choose one among the possible candidates
       t.boolean :is_approved, :default => false
