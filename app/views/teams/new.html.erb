@@ -1,3 +1,23 @@
 <% content_for :javascript_includes do %>
   <%= javascript_include_tag "teams/new" %>
 <% end %>
+
+<table>
+  <tr>
+    <td>
+      <table>
+        <% for y in 0..9 %>
+          <tr>
+            <% for x in 0..9 %>
+              <% i = y * 10 + x %>
+              <td id="<%= "grid-#{i}" %>">.</td>
+            <% end %>
+          </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <p><button onclick="window.App.arrange_team()">Arrange</button></p>
+    </td>
+  </tr>
+</table>
