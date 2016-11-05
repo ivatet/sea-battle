@@ -1,7 +1,6 @@
 class BattlesController < ApplicationController
   def index
     @vacant_battles = Battle
-      .select("battles.id, battles.battle_name")
       .joins("LEFT JOIN teams ON battles.id = teams.battle_id")
       .group("battles.id")
       .having("COUNT(CASE WHEN teams.is_approved = ? THEN 1 END) < 2", true)
@@ -38,6 +37,7 @@ class BattlesController < ApplicationController
   end
 
   def show
+    redirect_to new_battle_team_path(params[:id])
   end
 
   def update

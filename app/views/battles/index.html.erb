@@ -7,7 +7,7 @@
   </tr>
   <% @vacant_battles.each do |b| %>
   <tr>
-    <td><%= b.battle_name %></td>
+    <td><%=link_to b.battle_name, battle_path(b.id) %></td>
   </tr>
   <% end %>
 </table>
