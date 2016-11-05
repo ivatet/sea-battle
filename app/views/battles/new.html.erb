@@ -1,1 +1,15 @@
-<p>#new</p>
+<% flash.each do |name, msg| %>
+  <%= content_tag :b, msg, class: name %>
+<% end %>
+
+<%= form_for @battle do |f| %>
+  <p>
+    <%= f.label "Battle name" %>
+    <%= f.text_field :battle_name, :size => 40 %>
+    <%= recaptcha_tags %>
+  </p>
+
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>

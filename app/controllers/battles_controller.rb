@@ -10,9 +10,31 @@ class BattlesController < ApplicationController
   end
 
   def new
+    names = ["Battle Of The Eternal Day",
+             "Attack Of Frozen Fires",
+             "War Of Eternal Suffering",
+             "Assault Of The True King",
+             "Siege Of New Hope",
+             "War Of Blind Justice",
+             "Siege Of The Apocalypse",
+             "Assault Of The Last Stand"]
+
+    @battle = Battle.new(:battle_name => names.sample)
+  end
+
+  def battle_params
+    params.require(:battle).permit(:battle_name)
   end
 
   def create
+    @battle = Battle.new(battle_params)
+    if verify_recaptcha(model: @battle)
+      @battle.save
+      redirect_to @battle
+    else
+      flash.now[:error] = "Are you a human?"
+      render 'new'
+    end
   end
 
   def show
