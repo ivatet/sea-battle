@@ -54,9 +54,7 @@ class Team
 
 class TeamCreator
   is_collide: (boat, raster) ->
-    pa = boat.points()
-    first = pa[0]
-    last = pa[pa.length - 1]
+    [first, ..., last] = boat.points()
     for y in [first.topleft().y..last.bottomright().y]
       for x in [first.topleft().x..last.bottomright().x]
         return true if raster.value(x, y)
