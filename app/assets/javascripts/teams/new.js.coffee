@@ -6,7 +6,7 @@ class Point
     [@x, @y] = [x, y]
 
   inc: (coordinate) ->
-    if coordinate < 10 then coordinate + 1 else coordinate
+    if coordinate < 9 then coordinate + 1 else coordinate
 
   dec: (coordinate) ->
     if coordinate > 0 then coordinate - 1 else coordinate
