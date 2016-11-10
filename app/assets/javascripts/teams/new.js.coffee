@@ -7,21 +7,36 @@ class Canvas
   constructor: (@w, @h) ->
     @data = (false for [0 .. @w * @h - 1])
 
-  draw: (shape) ->
-    @data[p.y * @w + p.x] = true for p in shape.points
+  drawPoint: (p) ->
+    @data[p.y * @w + p.x] = true
+
+  drawShape: (shape) ->
+    @drawPoint p for p in shape.points
+
+  pointFits: (p) ->
+    p.x >= 0 and p.x < @w and p.y >= 0 and p.y < @h
+
+  shapeFits: (shape) ->
+    not (p for p in shape.points when not @pointFits p).length
+
+  mapShape: (shape) ->
+    new Shape (p for p in shape.points when @pointFits p)
+
+  shapeCollides: (shape) ->
+    (p for p in shape.points when @data[p.y * @w + p.x]).length
 
   visit: (visitor) ->
-    visitor(i, @data[i]) for i in [0 .. @w * @h - 1]
+    visitor i, @data[i] for i in [0 .. @w * @h - 1]
 
 
 class Point
   constructor: (@x, @y) ->
 
   sum: (p) ->
-    new Point(@x + p.x, @y + p.y)
+    new Point @x + p.x, @y + p.y
 
   mul: (k) ->
-    new Point(@x * k, @y * k)
+    new Point @x * k, @y * k
 
 
 class PointGenerator
@@ -29,21 +44,25 @@ class PointGenerator
     @points = []
     for y in [0 .. h - 1]
       for x in [0 .. w - 1]
-        @points.push new Point(x, y)
+        @points.push new Point x, y
 
   next: ->
-    i = random(@points.length)
-    p = @points[p]
-    @points.splice(i)
+    i = random @points.length
+    p = @points[i]
+    @points.splice i, 1
     p
 
 
-class Bar
+class Shape
+  constructor: (@points) ->
+
+
+class Bar extends Shape
   constructor: (p1, p2) ->
-    @points = []
+    super []
     for y in [p1.y .. p2.y]
       for x in [p1.x .. p2.x]
-        @points.push new Point(x, y)
+        @points.push new Point x, y
 
 
 class Position
@@ -70,7 +89,7 @@ class Ship
     @point.sum(@pos.iterator().mul(@len - 1))
 
   shape: ->
-    new Bar(@head(), @tail())
+    new Bar @head(), @tail()
 
 
 class Shipwreck
@@ -92,10 +111,28 @@ class Fleet
 class FleetGenerator
   constructor: (@w, @h, @lengths) ->
 
-  # FixMe
   next: =>
     fleet = new Fleet
-    fleet.add new Ship(new Point(3, 4), 2, new Position("v"))
+    canvas = new Canvas @w, @h
+    posGen = new PositionGenerator
+
+    for len in @lengths
+      ptGen = new PointGenerator @w, @h
+
+      while pt = ptGen.next()
+        ship = new Ship pt, len, posGen.next()
+
+        continue if not canvas.shapeFits ship.shape()
+
+        continue if canvas.shapeCollides(
+                      canvas.mapShape(
+                        new Shipwreck(ship).shape()))
+
+        fleet.add ship
+        canvas.drawShape ship.shape()
+
+        break
+
     fleet
 
 
@@ -106,9 +143,9 @@ class FleetRenderer
     $("#grid-#{i}").html(if v then "<b>o</b>" else "_")
 
   render: (fleet) =>
-    canvas = new Canvas(@w, @h)
-    canvas.draw(ship.shape()) for ship in fleet.ships
-    canvas.visit(@html)
+    canvas = new Canvas @w, @h
+    canvas.drawShape ship.shape() for ship in fleet.ships
+    canvas.visit @html
     fleet
 
 
