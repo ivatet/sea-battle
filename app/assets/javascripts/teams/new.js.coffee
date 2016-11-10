@@ -1,99 +1,130 @@
-random = (N) ->
-  Math.floor(Math.random() * N)
+# Arrange player's fleet on a two-dimensional map
+
+random = (n) -> Math.floor(Math.random() * n)
+
+
+class Canvas
+  constructor: (@w, @h) ->
+    @data = (false for [0 .. @w * @h - 1])
+
+  draw: (shape) ->
+    @data[p.y * @w + p.x] = true for p in shape.points
+
+  visit: (visitor) ->
+    visitor(i, @data[i]) for i in [0 .. @w * @h - 1]
+
 
 class Point
-  constructor: (x, y) ->
-    [@x, @y] = [x, y]
+  constructor: (@x, @y) ->
 
-  inc: (coordinate) ->
-    if coordinate < 9 then coordinate + 1 else coordinate
+  sum: (p) ->
+    new Point(@x + p.x, @y + p.y)
 
-  dec: (coordinate) ->
-    if coordinate > 0 then coordinate - 1 else coordinate
+  mul: (k) ->
+    new Point(@x * k, @y * k)
 
-  topleft: ->
-    new Point(@dec(@x), @dec(@y))
 
-  bottomright: ->
-    new Point(@inc(@x), @inc(@y))
+class PointGenerator
+  constructor: (w, h) ->
+    @points = []
+    for y in [0 .. h - 1]
+      for x in [0 .. w - 1]
+        @points.push new Point(x, y)
 
-class Boat
-  constructor: (x, y, len, pos) ->
-    [@x, @y, @len, @pos] = [x, y, len, pos]
+  next: ->
+    i = random(@points.length)
+    p = @points[p]
+    @points.splice(i)
+    p
 
-  points: ->
-    d = new Point((if @pos is "h" then 1 else 0),
-                  (if @pos is "v" then 1 else 0))
 
-    (new Point(@x + i * d.x,
-               @y + i * d.y) for i in [0..(@len - 1)])
+class Bar
+  constructor: (p1, p2) ->
+    @points = []
+    for y in [p1.y .. p2.y]
+      for x in [p1.x .. p2.x]
+        @points.push new Point(x, y)
 
-class Raster
+
+class Position
+  constructor: (@value) ->
+
+  iterator: ->
+    switch @value
+      when "h" then new Point(1, 0)
+      when "v" then new Point(0, 1)
+
+
+class PositionGenerator
+  next: ->
+    new Position ["v", "h"][random(2)]
+
+
+class Ship
+  constructor: (@point, @len, @pos) ->
+
+  head: ->
+    @point
+
+  tail: ->
+    @point.sum(@pos.iterator().mul(@len - 1))
+
+  shape: ->
+    new Bar(@head(), @tail())
+
+
+class Shipwreck
+  constructor: (@ship) ->
+
+  shape: ->
+    new Bar(@ship.head().sum(new Point(-1, -1)),
+            @ship.tail().sum(new Point( 1,  1)))
+
+
+class Fleet
   constructor: ->
-    @raster = (false for [0..99])
+    @ships = []
 
-  draw: (boat) ->
-    for p in boat.points()
-      @raster[p.y * 10 + p.x] = true
+  add: (ship) ->
+    @ships.push ship
 
-  value: (x, y) ->
-    @raster[y * 10 + x]
 
-class Team
-  constructor: ->
-    @boats = []
+class FleetGenerator
+  constructor: (@w, @h, @lengths) ->
 
-  add: (boat) ->
-    @boats.push(boat)
+  # FixMe
+  next: =>
+    fleet = new Fleet
+    fleet.add new Ship(new Point(3, 4), 2, new Position("v"))
+    fleet
 
-  raster: ->
-    r = new Raster
-    for boat in @boats
-      r.draw(boat)
-    return r
 
-class TeamCreator
-  is_collide: (boat, raster) ->
-    [first, ..., last] = boat.points()
-    for y in [first.topleft().y..last.bottomright().y]
-      for x in [first.topleft().x..last.bottomright().x]
-        return true if raster.value(x, y)
+class FleetRenderer
+  constructor: (@w, @h) ->
 
-    return false
+  html: (i, v) =>
+    $("#grid-#{i}").html(if v then "<b>o</b>" else "_")
 
-  create: ->
-    team = new Team
+  render: (fleet) =>
+    canvas = new Canvas(@w, @h)
+    canvas.draw(ship.shape()) for ship in fleet.ships
+    canvas.visit(@html)
+    fleet
 
-    for len in [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
-      raster = team.raster()
-      pos = ["v", "h"][random(2)]
-      options = []
-      for y in [0..10 - len]
-        for x in [0..10 - len]
-          boat = new Boat(x, y, len, pos)
 
-          if not @is_collide(boat, raster)
-            options.push(boat)
+compose = (f, g) ->
+  ->
+    g(f())
 
-      team.add(options[random(options.length)])
 
-    return team
+$ ->
+  generate = compose(
+    compose(new FleetGenerator(window.App.w,
+                               window.App.h,
+                               window.App.lengths).next,
+            new FleetRenderer(window.App.w,
+                              window.App.h).render),
+    (fleet) -> window.App.fleet = fleet)
 
-create_team = () ->
-  window.App.team = (new TeamCreator).create()
-
-render_team = () ->
-  raster = window.App.team.raster()
-  for i in [0..99]
-    $("#grid-#{i}").html(if raster.raster[i] then "<b>o</b>" else "_")
-
-arrange_team = () ->
-  create_team()
-  render_team()
-
-main = () ->
-  window.App =
-    team: []
-    arrange_team: arrange_team
-
-$(document).on('turbolinks:load', main);
+  window.App.fleet = generate()
+  window.App.generate = generate

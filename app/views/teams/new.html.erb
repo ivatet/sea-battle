@@ -1,15 +1,24 @@
+<%= javascript_tag do %>
+  window.App = {};
+  window.App.w = <%= @w %>;
+  window.App.h = <%= @h %>;
+  window.App.lengths = <%= @lengths %>;
+<% end %>
+
 <% content_for :javascript_includes do %>
   <%= javascript_include_tag "teams/new" %>
 <% end %>
+
+<%= link_to "Battle Radar" , battles_path %>
 
 <table>
   <tr>
     <td>
       <table>
-        <% for y in 0..9 %>
+        <% for y in 0 .. @h - 1 %>
           <tr>
-            <% for x in 0..9 %>
-              <% i = y * 10 + x %>
+            <% for x in 0 .. @w - 1 %>
+              <% i = y * @w + x %>
               <td id="<%= "grid-#{i}" %>">.</td>
             <% end %>
           </tr>
@@ -17,7 +26,7 @@
       </table>
     </td>
     <td>
-      <p><button onclick="window.App.arrange_team()">Arrange</button></p>
+      <p><button onclick="window.App.generate()">Generate</button></p>
     </td>
   </tr>
 </table>
