@@ -1,14 +1,26 @@
 class CreateAll < ActiveRecord::Migration
   def change
-    create_table :battles do |t|
-      # just a name given by the game creator
-      t.string :battle_name
+    create_table :fleet_configurations do |t|
+      t.belongs_to :battle_configuration
 
-      # the game creator which will be approved by default
+      t.integer :ship_length
+      t.integer :ship_cnt
+    end
+
+    create_table :battle_configurations do |t|
+      t.string :configuration_name
+      t.integer :width
+      t.integer :height
+    end
+
+    create_table :battles do |t|
+      t.belongs_to :battle_configuration
+
+      t.string :battle_name
       t.string :creator_uuid
 
-      # who the next turn belongs to
-      t.belongs_to :fleet
+      # who next turn belongs to
+      t.string :next_uuid
 
       # an optimisation which saves CPU on AJAX polling
       t.integer :turn_number, :default => 0
@@ -17,23 +29,22 @@ class CreateAll < ActiveRecord::Migration
     end
 
     create_table :fleets do |t|
-      # a fleet is assigned to only one game
       t.belongs_to :battle
 
-      # player UUID is originally stored in cookies
+      t.string :fleet_name
       t.string :player_uuid
 
       # the game creator should choose one among the possible candidates
       t.boolean :is_approved, :default => false
 
       # a JSON string which is not supposed to be changed once arranged
-      t.string :boat_arrangement
+      t.string :fleet_arrangement
 
       # a player's "shot map"
-      t.string :opponent_field
+      t.string :shot_map
 
       # an optimisation which saves CPU on game routing
-      t.integer :boat_cnt, :default => 10
+      t.integer :ship_cnt, :default => 10
 
       t.timestamps null: false
     end

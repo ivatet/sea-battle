@@ -13,24 +13,38 @@
 
 ActiveRecord::Schema.define(version: 20161030172110) do
 
+  create_table "battle_configurations", force: :cascade do |t|
+    t.string  "configuration_name"
+    t.integer "width"
+    t.integer "height"
+  end
+
   create_table "battles", force: :cascade do |t|
+    t.integer  "battle_configuration_id"
     t.string   "battle_name"
     t.string   "creator_uuid"
-    t.integer  "fleet_id"
-    t.integer  "turn_number",  default: 0
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.string   "next_player_uuid"
+    t.integer  "turn_number",             default: 0
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  create_table "fleet_configurations", force: :cascade do |t|
+    t.integer "battle_configuration_id"
+    t.integer "ship_length"
+    t.integer "ship_cnt"
   end
 
   create_table "fleets", force: :cascade do |t|
     t.integer  "battle_id"
+    t.string   "fleet_name"
     t.string   "player_uuid"
-    t.boolean  "is_approved",      default: false
-    t.string   "boat_arrangement"
-    t.string   "opponent_field"
-    t.integer  "boat_cnt",         default: 10
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.boolean  "is_approved",       default: false
+    t.string   "fleet_arrangement"
+    t.string   "shot_map"
+    t.integer  "ship_cnt",          default: 10
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
 end
