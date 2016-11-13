@@ -9,8 +9,8 @@ class CreateAll < ActiveRecord::Migration
 
     create_table :battle_configurations do |t|
       t.string :configuration_name
-      t.integer :width
-      t.integer :height
+      t.integer :map_width
+      t.integer :map_height
     end
 
     create_table :battles do |t|
@@ -18,35 +18,22 @@ class CreateAll < ActiveRecord::Migration
 
       t.string :battle_name
       t.string :creator_uuid
+      t.string :attacker_uuid
 
-      # who next turn belongs to
-      t.string :next_uuid
-
-      # an optimisation which saves CPU on AJAX polling
-      t.integer :turn_number, :default => 0
-
-      t.timestamps null: false
+      t.timestamps
     end
 
     create_table :fleets do |t|
       t.belongs_to :battle
 
       t.string :fleet_name
-      t.string :player_uuid
+      t.string :owner_uuid
+      t.boolean :is_approved
 
-      # the game creator should choose one among the possible candidates
-      t.boolean :is_approved, :default => false
+      t.string :fleet_json
+      t.string :shot_map_json
 
-      # a JSON string which is not supposed to be changed once arranged
-      t.string :fleet_arrangement
-
-      # a player's "shot map"
-      t.string :shot_map
-
-      # an optimisation which saves CPU on game routing
-      t.integer :ship_cnt, :default => 10
-
-      t.timestamps null: false
+      t.timestamps
     end
   end
 end

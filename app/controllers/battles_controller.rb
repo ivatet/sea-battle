@@ -18,11 +18,12 @@ class BattlesController < ApplicationController
              "Siege Of The Apocalypse",
              "Assault Of The Last Stand"]
 
-    @battle = Battle.new(:battle_name => names.sample)
+    @battle = Battle.new(:battle_name => names.sample,
+                         :battle_configuration_id => BattleConfiguration.first.id)
   end
 
   def battle_params
-    params.require(:battle).permit(:battle_name)
+    params.require(:battle).permit(:battle_name, :battle_configuration_id)
   end
 
   def create

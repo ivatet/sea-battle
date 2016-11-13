@@ -1,0 +1,6 @@
+<%
+  fleet_size = battle_cfg.fleet_configurations.map do |fleet_cfg|
+    fleet_cfg.ship_cnt
+  end.reduce(0, :+)
+%>
+<%= "#{fleet_size} battleships@#{battle_cfg.map_width}x#{battle_cfg.map_height}" %>

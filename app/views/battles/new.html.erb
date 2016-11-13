@@ -3,13 +3,22 @@
 <% end %>
 
 <%= form_for @battle do |f| %>
-  <p>
+  <div>
     <%= f.label "Battle name" %>
     <%= f.text_field :battle_name, :size => 40 %>
-    <%= recaptcha_tags %>
-  </p>
+  </div>
 
-  <p>
-    <%= f.submit "Create" %>
-  </p>
+  <% BattleConfiguration.all.each do |battle_cfg| %>
+    <div>
+      <%= f.radio_button :battle_configuration_id,
+                         battle_cfg.id,
+                         :checked => @battle.battle_configuration_id == battle_cfg.id %>
+      <%= f.label battle_cfg.configuration_name %>
+      <%= f.label render :partial => "battle_configuration",
+                         :locals => { :battle_cfg => battle_cfg } %>
+    </div>
+  <% end %>
+
+  <%= recaptcha_tags %>
+  <%= f.submit "Create" %>
 <% end %>
