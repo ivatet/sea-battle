@@ -16,13 +16,13 @@ ActiveRecord::Schema.define(version: 20161030172110) do
   create_table "battles", force: :cascade do |t|
     t.string   "battle_name"
     t.string   "creator_uuid"
-    t.integer  "team_id"
+    t.integer  "fleet_id"
     t.integer  "turn_number",  default: 0
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end
 
-  create_table "teams", force: :cascade do |t|
+  create_table "fleets", force: :cascade do |t|
     t.integer  "battle_id"
     t.string   "player_uuid"
     t.boolean  "is_approved",      default: false

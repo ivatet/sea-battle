@@ -1,9 +1,9 @@
 class BattlesController < ApplicationController
   def index
     @vacant_battles = Battle
-      .joins("LEFT JOIN teams ON battles.id = teams.battle_id")
+      .joins("LEFT JOIN fleets ON battles.id = fleets.battle_id")
       .group("battles.id")
-      .having("COUNT(CASE WHEN teams.is_approved = ? THEN 1 END) < 2", true)
+      .having("COUNT(CASE WHEN fleets.is_approved = ? THEN 1 END) < 2", true)
 
     @ongoing_battles = []
   end
@@ -37,7 +37,7 @@ class BattlesController < ApplicationController
   end
 
   def show
-    redirect_to new_battle_team_path(params[:id])
+    redirect_to new_battle_fleet_path(params[:id])
   end
 
   def update

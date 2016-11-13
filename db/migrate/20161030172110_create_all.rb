@@ -8,7 +8,7 @@ class CreateAll < ActiveRecord::Migration
       t.string :creator_uuid
 
       # who the next turn belongs to
-      t.belongs_to :team
+      t.belongs_to :fleet
 
       # an optimisation which saves CPU on AJAX polling
       t.integer :turn_number, :default => 0
@@ -16,8 +16,8 @@ class CreateAll < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    create_table :teams do |t|
-      # a team is assigned to only one game
+    create_table :fleets do |t|
+      # a fleet is assigned to only one game
       t.belongs_to :battle
 
       # player UUID is originally stored in cookies
