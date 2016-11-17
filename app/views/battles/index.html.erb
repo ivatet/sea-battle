@@ -4,10 +4,12 @@
 <table>
   <tr>
     <th>Battle</th>
+    <th>Configuration</th>
   </tr>
   <% @vacant_battles.each do |b| %>
   <tr>
-    <td><%=link_to b.battle_name, battle_path(b.id) %></td>
+    <td><%= link_to b.battle_name, battle_path(b.id) %></td>
+    <td><%= b.battle_configuration.configuration_name %></td>
   </tr>
   <% end %>
 </table>
