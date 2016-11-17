@@ -9,22 +9,32 @@
   <%= javascript_include_tag "fleets/new" %>
 <% end %>
 
-<table>
-  <tr>
-    <td>
-      <table>
-        <% for y in 0 .. @h - 1 %>
-          <tr>
-            <% for x in 0 .. @w - 1 %>
-              <% i = y * @w + x %>
-              <td id="<%= "grid-#{i}" %>">.</td>
-            <% end %>
-          </tr>
-        <% end %>
-      </table>
-    </td>
-    <td>
-      <p><button onclick="window.App.generate()">Generate</button></p>
-    </td>
-  </tr>
-</table>
+<%= form_for [@battle, @fleet] do |f| %>
+  <%= f.label "Fleet name" %>
+  <%= f.text_field :fleet_name, :size => 40 %>
+  <table>
+    <tr>
+      <td>
+        <table>
+          <% for y in 0 .. @h - 1 %>
+            <tr>
+              <% for x in 0 .. @w - 1 %>
+                <% i = y * @w + x %>
+                <td id="<%= "grid-#{i}" %>">.</td>
+              <% end %>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+      <td>
+        <p><button id="fleet-generate-btn">Generate</button></p>
+      </td>
+    </tr>
+  </table>
+
+  <% if not @fleet.is_approved %>
+    <%= recaptcha_tags %>
+  <% end %>
+  <%= hidden_field_tag :fleet_json %>
+  <%= f.submit "Create" %>
+<% end %>

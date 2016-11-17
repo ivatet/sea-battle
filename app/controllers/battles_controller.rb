@@ -29,6 +29,7 @@ class BattlesController < ApplicationController
   def create
     @battle = Battle.new(battle_params)
     if verify_recaptcha(model: @battle)
+      @battle[:creator_uuid] = session[:player_uuid]
       @battle.save
       redirect_to @battle
     else
