@@ -155,16 +155,14 @@ compose = (f, g) ->
 
 
 $ ->
-  set = (fleet) ->
-    $("#fleet_json").val(JSON.stringify(fleet))
-
   generate = compose(
     compose(new FleetGenerator(window.App.w,
                                window.App.h,
                                window.App.lengths).next,
             new FleetRenderer(window.App.w,
                               window.App.h).render),
-    (fleet) -> set(fleet)
+    (fleet) ->
+      $("#fleet_json").val(JSON.stringify(fleet))
   )
 
   generate()
