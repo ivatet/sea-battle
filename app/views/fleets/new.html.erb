@@ -12,6 +12,9 @@
 <%= form_for [@battle, @fleet] do |f| %>
   <%= f.label "Fleet name" %>
   <%= f.text_field :fleet_name, :size => 40 %>
+  <% if @fleet.errors[:fleet_name].any? %>
+      <%= content_tag :b, @fleet.errors[:fleet_name].first %>
+    <% end %>
   <table>
     <tr>
       <td>
@@ -32,9 +35,10 @@
     </tr>
   </table>
 
-  <% if not @fleet.is_approved %>
+  <% unless @battle[:creator_uuid] == session[:player_uuid] %>
     <%= recaptcha_tags %>
   <% end %>
-  <%= hidden_field_tag :fleet_json %>
+
+  <%= f.hidden_field :fleet_json, :id => "fleet_json" %>
   <%= f.submit "Create" %>
 <% end %>

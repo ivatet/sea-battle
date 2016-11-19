@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :battles, except: [:edit, :destroy] do
-    resources :fleets, except: [:edit, :update, :destroy]
+    resources :fleets, except: [:show, :edit, :update, :destroy]
   end
 
   root 'battles#index'
