@@ -18,8 +18,7 @@ class BattlesController < ApplicationController
              "Siege Of The Apocalypse",
              "Assault Of The Last Stand"]
 
-    @battle = Battle.new(:battle_name => names.sample,
-                         :battle_configuration_id => BattleConfiguration.first.id)
+    @battle = BattleConfiguration.first.battles.new(:battle_name => names.sample)
   end
 
   def battle_params
@@ -28,18 +27,26 @@ class BattlesController < ApplicationController
 
   def create
     @battle = Battle.new(battle_params)
-    if verify_recaptcha(model: @battle)
-      @battle[:creator_uuid] = session[:player_uuid]
-      @battle.save
-      redirect_to @battle
-    else
-      flash.now[:error] = "Are you a human?"
-      render 'new'
+
+    unless @battle.valid?
+      render 'new' and return
     end
+
+    unless verify_recaptcha(model: @battle)
+      flash.now[:error] = "Are you a human?"
+      render 'new' and return
+    end
+
+    @battle[:creator_uuid] = session[:player_uuid]
+
+    unless @battle.save
+      render 'new' and return
+    end
+
+    redirect_to new_battle_fleet_path(@battle)
   end
 
   def show
-    redirect_to new_battle_fleet_path(params[:id])
   end
 
   def update

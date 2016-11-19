@@ -1,11 +1,14 @@
 <% flash.each do |name, msg| %>
-  <%= content_tag :b, msg, class: name %>
+  <%= content_tag :b, msg %>
 <% end %>
 
 <%= form_for @battle do |f| %>
   <div>
     <%= f.label "Battle name" %>
-    <%= f.text_field :battle_name, :size => 40 %>
+    <%= f.text_field :battle_name %>
+    <% if @battle.errors[:battle_name].any? %>
+      <%= content_tag :b, @battle.errors[:battle_name].first %>
+    <% end %>
   </div>
 
   <% BattleConfiguration.all.each do |battle_cfg| %>

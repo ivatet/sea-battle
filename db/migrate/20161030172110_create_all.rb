@@ -16,8 +16,8 @@ class CreateAll < ActiveRecord::Migration
     create_table :battles do |t|
       t.belongs_to :battle_configuration
 
-      t.string :battle_name
-      t.string :creator_uuid
+      t.string :battle_name, :null => false
+      t.string :creator_uuid, :null => false
       t.string :attacker_uuid
 
       t.timestamps
@@ -26,12 +26,12 @@ class CreateAll < ActiveRecord::Migration
     create_table :fleets do |t|
       t.belongs_to :battle
 
-      t.string :fleet_name
-      t.string :owner_uuid
-      t.boolean :is_approved
+      t.string :fleet_name, :null => false
+      t.string :owner_uuid, :null => false
+      t.boolean :is_approved, :default => false
 
-      t.string :fleet_json
-      t.string :shot_map_json
+      t.string :fleet_json, :null => false
+      t.string :shot_map_json, :default => "[]"
 
       t.timestamps
     end

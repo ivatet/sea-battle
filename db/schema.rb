@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(version: 20161030172110) do
 
   create_table "battles", force: :cascade do |t|
     t.integer  "battle_configuration_id"
-    t.string   "battle_name"
-    t.string   "creator_uuid"
+    t.string   "battle_name",             limit: 40, null: false
+    t.string   "creator_uuid",                       null: false
     t.string   "attacker_uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -36,11 +36,11 @@ ActiveRecord::Schema.define(version: 20161030172110) do
 
   create_table "fleets", force: :cascade do |t|
     t.integer  "battle_id"
-    t.string   "fleet_name"
-    t.string   "owner_uuid"
-    t.boolean  "is_approved"
-    t.string   "fleet_json"
-    t.string   "shot_map_json"
+    t.string   "fleet_name",    limit: 40,                 null: false
+    t.string   "owner_uuid",                               null: false
+    t.boolean  "is_approved",              default: false
+    t.string   "fleet_json",                               null: false
+    t.string   "shot_map_json",            default: "[]"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
