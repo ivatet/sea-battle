@@ -1,10 +1,6 @@
 class BattlesController < ApplicationController
   def index
-    @vacant_battles = Battle
-      .joins("LEFT JOIN fleets ON battles.id = fleets.battle_id")
-      .group("battles.id")
-      .having("COUNT(CASE WHEN fleets.is_approved = ? THEN 1 END) < 2", true)
-
+    @vacant_battles = Battle.vacant_games
     @ongoing_battles = []
   end
 

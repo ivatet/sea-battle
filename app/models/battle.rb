@@ -7,4 +7,11 @@ class Battle < ActiveRecord::Base
     too_short: "%{count} characters is the minimum allowed",
     too_long: "%{count} characters is the maximum allowed"
   }
+
+  def self.vacant_games
+    self
+      .joins("LEFT JOIN fleets ON battles.id = fleets.battle_id")
+      .group("battles.id")
+      .having("COUNT(CASE WHEN fleets.is_approved = ? THEN 1 END) < 2", true)
+  end
 end
