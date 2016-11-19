@@ -39,10 +39,13 @@ class BattlesController < ApplicationController
       render 'new' and return
     end
 
+    # TODO redirect to "show" page
     redirect_to new_battle_fleet_path(@battle)
   end
 
   def show
+    # TODO render ongoing battle if battle has started
+    # TODO render manual of what to do next if battle has not started
   end
 
   def update
