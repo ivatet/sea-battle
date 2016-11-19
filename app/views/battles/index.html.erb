@@ -3,11 +3,13 @@
 <h1>Battle radar</h1>
 <table>
   <tr>
+    <th>ID</th>
     <th>Battle</th>
     <th>Configuration</th>
   </tr>
   <% @vacant_battles.each do |b| %>
   <tr>
+    <td><%= b.id %></td>
     <td><%= link_to b.battle_name, battle_path(b.id) %></td>
     <td><%= b.battle_configuration.configuration_name %></td>
   </tr>
