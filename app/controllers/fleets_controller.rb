@@ -27,9 +27,11 @@ class FleetsController < ApplicationController
       render 'new' and return
     end
 
-    unless verify_recaptcha(model: @fleet)
-      flash.now[:error] = "Are you a human?"
-      render 'new' and return
+    unless @battle[:creator_uuid] == session[:player_uuid]
+      unless verify_recaptcha(model: @fleet)
+        flash.now[:error] = "Are you a human?"
+        render 'new' and return
+      end
     end
 
     @fleet.owner_uuid = session[:player_uuid]
