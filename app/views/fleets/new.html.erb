@@ -9,6 +9,10 @@
   <%= javascript_include_tag "fleets/new" %>
 <% end %>
 
+<% flash.each do |name, msg| %>
+  <%= content_tag :b, msg %>
+<% end %>
+
 <%= form_for [@battle, @fleet] do |f| %>
   <%= f.label "Fleet name" %>
   <%= f.text_field :fleet_name, :size => 40 %>

@@ -22,8 +22,15 @@ class FleetsController < ApplicationController
       render 'new' and return
     end
 
-    # TODO allow one UUID per battle
-    # TODO captcha for the joiners
+    if @battle.fleets.any? { |f| f.owner_uuid == session[:player_uuid] }
+      flash.now[:error] = "You already created a fleet!"
+      render 'new' and return
+    end
+
+    unless verify_recaptcha(model: @fleet)
+      flash.now[:error] = "Are you a human?"
+      render 'new' and return
+    end
 
     @fleet.owner_uuid = session[:player_uuid]
     @fleet.is_approved = @battle[:creator_uuid] == session[:player_uuid]
