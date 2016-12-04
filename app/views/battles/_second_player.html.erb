@@ -1,0 +1,5 @@
+<% if @battle.approved_joiner_fleet %>
+Approved
+<% else %>
+<%= link_to "Approve", battle_fleets_path(@battle) %>
+<% end %>
