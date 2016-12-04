@@ -8,10 +8,18 @@ class Battle < ActiveRecord::Base
     too_long: "%{count} characters is the maximum allowed"
   }
 
-  def self.vacant_games
+  def self.blank_games
     self
       .joins("LEFT JOIN fleets ON battles.id = fleets.battle_id")
       .group("battles.id")
       .having("COUNT(CASE WHEN fleets.is_approved = ? THEN 1 END) < 2", true)
+  end
+
+  def ongoing?
+    fleets.many? { |f| f.is_approved }
+  end
+
+  def player?(uuid)
+    fleets.any? { |f| f.owner_uuid == uuid }
   end
 end

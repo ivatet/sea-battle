@@ -1,6 +1,6 @@
 class BattlesController < ApplicationController
   def index
-    @vacant_battles = Battle.vacant_games
+    @blank_battles = Battle.blank_games
     @ongoing_battles = []
   end
 
@@ -17,10 +17,6 @@ class BattlesController < ApplicationController
     @battle = BattleConfiguration.first.battles.new(:battle_name => names.sample)
   end
 
-  def battle_params
-    params.require(:battle).permit(:battle_name, :battle_configuration_id)
-  end
-
   def create
     @battle = Battle.new(battle_params)
 
@@ -33,21 +29,54 @@ class BattlesController < ApplicationController
       render 'new' and return
     end
 
-    @battle[:creator_uuid] = session[:player_uuid]
+    @battle.creator_uuid = session[:player_uuid]
 
     unless @battle.save
       render 'new' and return
     end
 
-    # TODO redirect to "show" page
-    redirect_to new_battle_fleet_path(@battle)
+    redirect_to battle_path(@battle)
   end
 
   def show
-    # TODO render ongoing battle if battle has started
-    # TODO render manual of what to do next if battle has not started
+    @battle = Battle.find(params[:id])
+    if @battle.ongoing?
+      if @battle.player? session[:player_uuid]
+        show_ongoing_player
+      else
+        show_ongoing_guest
+      end
+    else
+      if @battle.creator_uuid == session[:player_uuid]
+        show_blank_creator
+      else
+        show_blank_joiner
+      end
+    end
   end
 
   def update
+  end
+
+private
+
+  def battle_params
+    params.require(:battle).permit(:battle_name, :battle_configuration_id)
+  end
+
+  def show_blank_creator
+    render "show_blank_creator"
+  end
+
+  def show_blank_joiner
+    render "show_blank_joiner"
+  end
+
+  def show_ongoing_player
+    render "show_ongoing_player"
+  end
+
+  def show_ongoing_guest
+    render "show_ongoing_guest"
   end
 end

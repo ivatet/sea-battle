@@ -2,6 +2,8 @@ class FleetsController < ApplicationController
   before_filter :set_battle, :set_config
 
   def index
+    # TODO fleet list with a "fight" button for creator
+    # TODO fleet list for joiner AND a "join" button if not joined
   end
 
   def new
@@ -27,7 +29,7 @@ class FleetsController < ApplicationController
       render 'new' and return
     end
 
-    unless @battle[:creator_uuid] == session[:player_uuid]
+    unless @battle.creator_uuid == session[:player_uuid]
       unless verify_recaptcha(model: @fleet)
         flash.now[:error] = "Are you a human?"
         render 'new' and return
@@ -35,13 +37,13 @@ class FleetsController < ApplicationController
     end
 
     @fleet.owner_uuid = session[:player_uuid]
-    @fleet.is_approved = @battle[:creator_uuid] == session[:player_uuid]
+    @fleet.is_approved = @battle.creator_uuid == @fleet.owner_uuid
 
     unless @fleet.save
       render 'new' and return
     end
 
-    redirect_to battle_fleets_path(@battle)
+    redirect_to battle_path(@battle)
   end
 
 private

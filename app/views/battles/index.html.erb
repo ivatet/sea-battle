@@ -7,7 +7,7 @@
     <th>Battle</th>
     <th>Configuration</th>
   </tr>
-  <% @vacant_battles.each do |b| %>
+  <% @blank_battles.each do |b| %>
   <tr>
     <td><%= b.id %></td>
     <td><%= link_to b.battle_name, battle_path(b.id) %></td>
