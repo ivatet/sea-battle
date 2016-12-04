@@ -19,7 +19,11 @@ class Battle < ActiveRecord::Base
     fleets.many? { |f| f.is_approved }
   end
 
-  def player?(uuid)
-    fleets.any? { |f| f.owner_uuid == uuid }
+  def fleet_by_uuid(uuid)
+    fleets.find { |f| f.owner_uuid == uuid }
+  end
+
+  def approved_joiner_fleet
+    fleets.find { |f| f.is_approved and f.owner_uuid != creator_uuid }
   end
 end

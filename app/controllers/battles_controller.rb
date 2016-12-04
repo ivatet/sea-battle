@@ -41,7 +41,7 @@ class BattlesController < ApplicationController
   def show
     @battle = Battle.find(params[:id])
     if @battle.ongoing?
-      if @battle.player? session[:player_uuid]
+      if @battle.fleet_by_uuid(session[:player_uuid])
         show_ongoing_player
       else
         show_ongoing_guest
