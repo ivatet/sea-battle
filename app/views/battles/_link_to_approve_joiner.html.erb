@@ -1,0 +1,5 @@
+<% if joiner_approved? %>
+Done!
+<% else %>
+<%= link_to "Approve player", battle_fleets_path(@battle) %>
+<% end %>

@@ -14,16 +14,4 @@ class Battle < ActiveRecord::Base
       .group("battles.id")
       .having("COUNT(CASE WHEN fleets.is_approved = ? THEN 1 END) < 2", true)
   end
-
-  def ongoing?
-    fleets.many? { |f| f.is_approved }
-  end
-
-  def fleet_by_uuid(uuid)
-    fleets.find { |f| f.owner_uuid == uuid }
-  end
-
-  def approved_joiner_fleet
-    fleets.find { |f| f.is_approved and f.owner_uuid != creator_uuid }
-  end
 end

@@ -17,7 +17,7 @@
                          battle_cfg.id,
                          :checked => @battle.battle_configuration_id == battle_cfg.id %>
       <%= f.label battle_cfg.configuration_name %>
-      <%= f.label battle_configuration_description battle_cfg %>
+      <%= f.label battle_cfg_descr(battle_cfg) %>
     </div>
   <% end %>
 
