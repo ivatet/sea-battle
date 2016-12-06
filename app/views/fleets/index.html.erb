@@ -1,1 +1,18 @@
-<p>#index</p>
+<h1><%= @battle.battle_name %></h1>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Fleet</th>
+    <th>Badge</th>
+    <th>Approve</th>
+  </tr>
+  <% @battle.fleets.each do |f| %>
+  <tr>
+    <td><%= f.id %></td>
+    <td><%= f.fleet_name %></td>
+    <td><%= badge_partial %></td>
+    <td><%= button_partial %></td>
+  </tr>
+  <% end %>
+</table>

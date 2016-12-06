@@ -22,12 +22,14 @@ module BattleHelper
     end
   end
 
-  def fleet_created?
+  def link_to_create_fleet_partial
     uuid = session[:player_uuid]
-    @battle.fleets.any? { |f| f.owner_uuid == uuid }
+    is_fleet_created = @battle.fleets.any? { |f| f.owner_uuid == uuid }
+    is_fleet_created ? "label_complete" : "link_to_create_fleet"
   end
 
-  def joiner_approved?
-    @battle.fleets.any? { |f| f.owner_uuid != @battle.creator_uuid and f.is_approved }
+  def link_to_approve_joiner_partial
+    is_approved = @battle.fleets.any? { |f| f.owner_uuid != @battle.creator_uuid and f.is_approved }
+    is_approved ? "label_complete" : "link_to_approve_joiner"
   end
 end

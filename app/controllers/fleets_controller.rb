@@ -2,8 +2,7 @@ class FleetsController < ApplicationController
   before_filter :set_battle, :set_config
 
   def index
-    # TODO fleet list with a "fight" button for creator
-    # TODO fleet list for joiner AND a "join" button if not joined
+    @battle = Battle.find(params[:battle_id])
   end
 
   def new
@@ -46,20 +45,20 @@ class FleetsController < ApplicationController
     redirect_to battle_path(@battle)
   end
 
-private
+  private
 
-  def fleet_params
-    params.require(:fleet).permit(:fleet_name, :fleet_json)
-  end
+    def fleet_params
+      params.require(:fleet).permit(:fleet_name, :fleet_json)
+    end
 
-  def set_battle
-    @battle = Battle.find(params[:battle_id])
-  end
+    def set_battle
+      @battle = Battle.find(params[:battle_id])
+    end
 
-  def set_config
-    battle_cfg = @battle.battle_configuration
+    def set_config
+      battle_cfg = @battle.battle_configuration
 
-    @w, @h = battle_cfg.map_width, battle_cfg.map_height
-    @lengths = battle_cfg.flatten_ship_lengths
-  end
+      @w, @h = battle_cfg.map_width, battle_cfg.map_height
+      @lengths = battle_cfg.flatten_ship_lengths
+    end
 end
