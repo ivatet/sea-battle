@@ -23,8 +23,7 @@ module BattleHelper
   end
 
   def link_to_create_fleet_partial
-    uuid = session[:player_uuid]
-    is_fleet_created = @battle.fleets.any? { |f| f.owner_uuid == uuid }
+    is_fleet_created = @battle.fleets.any? { |f| f.owner_uuid == session[:player_uuid] }
     is_fleet_created ? "label_complete" : "link_to_create_fleet"
   end
 
