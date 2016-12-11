@@ -11,8 +11,8 @@
   <tr>
     <td><%= f.id %></td>
     <td><%= f.fleet_name %></td>
-    <td><%= badge_partial %></td>
-    <td><%= button_partial %></td>
+    <td><%= render badge_partial(f) if badge_partial(f) %></td>
+    <td><%= render button_partial(f) if button_partial(f) %></td>
   </tr>
   <% end %>
 </table>
