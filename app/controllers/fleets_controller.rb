@@ -1,11 +1,12 @@
 class FleetsController < ApplicationController
-  before_filter :set_battle, :set_config
+  before_filter :set_battle
 
   def index
     @battle = Battle.find(params[:battle_id])
   end
 
   def new
+    set_battle_config
     names = ["Pain Killers",
              "Team Berserker",
              "The Ultimate Warrior",
@@ -17,6 +18,7 @@ class FleetsController < ApplicationController
   end
 
   def create
+    set_battle_config
     @fleet = @battle.fleets.new(fleet_params)
 
     unless @fleet.valid?
@@ -45,20 +47,37 @@ class FleetsController < ApplicationController
     redirect_to battle_path(@battle)
   end
 
+  def update
+    @fleet = @battle.fleets.find(params[:id])
+
+    if fleet_params[:is_approved] == "true"
+      update_is_approved
+    end
+
+    redirect_to battle_path(@battle)
+  end
+
   private
 
     def fleet_params
-      params.require(:fleet).permit(:fleet_name, :fleet_json)
+      params.require(:fleet).permit(:fleet_name, :fleet_json, :is_approved)
     end
 
     def set_battle
       @battle = Battle.find(params[:battle_id])
     end
 
-    def set_config
+    def set_battle_config
       battle_cfg = @battle.battle_configuration
-
       @w, @h = battle_cfg.map_width, battle_cfg.map_height
       @lengths = battle_cfg.flatten_ship_lengths
+    end
+
+    def update_is_approved
+      return if @battle.approved_any?
+      return if @battle.creator_uuid != session[:player_uuid]
+      return if @fleet.owner_uuid == session[:player_uuid]
+      @fleet.is_approved = true
+      @fleet.save
     end
 end

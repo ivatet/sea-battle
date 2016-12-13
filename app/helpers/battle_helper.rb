@@ -14,7 +14,7 @@ module BattleHelper
     uuid = session[:player_uuid]
     is_ongoing = @battle.fleets.many? { |f| f.is_approved }
     if is_ongoing
-      is_player = fleets.find { |f| f.owner_uuid == uuid and f.is_approved }
+      is_player = @battle.fleets.find { |f| f.owner_uuid == uuid and f.is_approved }
       if is_player then "ongoing_player" else "ongoing_guest" end
     else
       is_creator = @battle.creator_uuid == uuid
@@ -28,7 +28,6 @@ module BattleHelper
   end
 
   def link_to_approve_joiner_partial
-    is_approved = @battle.fleets.any? { |f| f.owner_uuid != @battle.creator_uuid and f.is_approved }
-    is_approved ? "label_complete" : "link_to_approve_joiner"
+    @battle.approved_any? ? "label_complete" : "link_to_approve_joiner"
   end
 end

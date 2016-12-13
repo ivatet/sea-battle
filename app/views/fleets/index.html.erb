@@ -12,9 +12,9 @@
     <td><%= f.id %></td>
     <td><%= f.fleet_name %></td>
     <td><%= render badge_partial(f) if badge_partial(f) %></td>
-    <td><%= render button_partial(f) if button_partial(f) %></td>
+    <td><%= render :partial => button_partial(f), :locals => { :fleet => f } if button_partial(f) %></td>
   </tr>
   <% end %>
 </table>
 
-<%= link_to "Create fleet", new_battle_fleet_path(@battle) unless approved_any? or is_fleet_created? %>
+<%= link_to "Create fleet", new_battle_fleet_path(@battle) unless @battle.approved_any? or is_fleet_created? %>

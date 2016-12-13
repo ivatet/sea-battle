@@ -1,1 +1,4 @@
-<b>Approve!</b>
+<%= form_for [@battle, fleet] do |f| %>
+<%= f.hidden_field :is_approved, :value => true %>
+<%= f.submit "Approve" %>
+<% end %>
