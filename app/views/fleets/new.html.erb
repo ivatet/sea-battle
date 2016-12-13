@@ -9,6 +9,8 @@
   <%= javascript_include_tag "fleets/new" %>
 <% end %>
 
+<h1><%= link_to @battle.battle_name, battle_path(@battle) %></h1>
+
 <% flash.each do |name, msg| %>
   <%= content_tag :b, msg %>
 <% end %>
