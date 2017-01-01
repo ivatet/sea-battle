@@ -11,4 +11,12 @@ class Battle < ActiveRecord::Base
   def joiner_approved?
     fleets.any? { |f| f.owner_uuid != creator_uuid and f.is_approved }
   end
+
+  def ongoing?
+    fleets.count { |f| f.is_approved } > 1
+  end
+
+  def approved_fleets
+    fleets.find_all { |f| f.is_approved }
+  end
 end

@@ -31,7 +31,7 @@
     <td><%= b.id %></td>
     <td><%= link_to b.battle_name, battle_path(b.id) %></td>
     <td><%= b.battle_configuration.configuration_name %></td>
-    <% approved_fleets(b).each do |f| %>
+    <% b.approved_fleets.each do |f| %>
       <td><%= f.fleet_name %></td>
     <% end %>
   </tr>

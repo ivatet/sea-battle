@@ -2,7 +2,6 @@ class FleetsController < ApplicationController
   before_filter :set_battle
 
   def index
-    @battle = Battle.find(params[:battle_id])
   end
 
   def new
@@ -44,6 +43,10 @@ class FleetsController < ApplicationController
       render 'new' and return
     end
 
+    @battle.reload
+
+    set_attacker if @battle.ongoing?
+
     redirect_to battle_path(@battle)
   end
 
@@ -79,5 +82,13 @@ class FleetsController < ApplicationController
       return if @fleet.owner_uuid == session[:player_uuid]
       @fleet.is_approved = true
       @fleet.save
+      @battle.reload
+
+      set_attacker if @battle.ongoing?
+    end
+
+    def set_attacker
+      @battle.attacker_uuid = @battle.approved_fleets.map { |f| f.owner_uuid }.sample
+      @battle.save
     end
 end
