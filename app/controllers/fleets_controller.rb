@@ -51,7 +51,7 @@ class FleetsController < ApplicationController
     @fleet = @battle.fleets.find(params[:id])
 
     if fleet_params[:is_approved] == "true"
-      update_is_approved
+      approve_by_creator
     end
 
     redirect_to battle_path(@battle)
@@ -73,8 +73,8 @@ class FleetsController < ApplicationController
       @lengths = battle_cfg.flatten_ship_lengths
     end
 
-    def update_is_approved
-      return if @battle.approved_any?
+    def approve_by_creator
+      return if @battle.joiner_approved?
       return if @battle.creator_uuid != session[:player_uuid]
       return if @fleet.owner_uuid == session[:player_uuid]
       @fleet.is_approved = true

@@ -28,6 +28,11 @@ module BattleHelper
   end
 
   def link_to_approve_joiner_partial
-    @battle.approved_any? ? "label_complete" : "link_to_approve_joiner"
+    @battle.joiner_approved? ? "label_complete" : "link_to_approve_joiner"
+  end
+
+  def approved_fleets(battle)
+    f = battle.fleets.find_all { |f| f.is_approved }
+    "#{f.first.fleet_name} vs. #{f.last.fleet_name}"
   end
 end

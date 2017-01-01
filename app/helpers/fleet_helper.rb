@@ -9,7 +9,7 @@ module FleetHelper
   end
 
   def button_partial(fleet)
-    return nil if @battle.approved_any?
+    return nil if @battle.joiner_approved?
     return nil unless @battle.creator_uuid == session[:player_uuid]
     return "button_approve" unless fleet.owner_uuid == @battle.creator_uuid
   end

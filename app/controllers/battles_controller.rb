@@ -1,7 +1,16 @@
 class BattlesController < ApplicationController
   def index
-    @blank_battles = Battle.blank_games
-    @ongoing_battles = []
+    @blank_battles = Battle
+      .joins("LEFT JOIN fleets ON battles.id = fleets.battle_id")
+      .group("battles.id")
+      .having("COUNT(CASE WHEN fleets.is_approved = ? THEN 1 END) < 2", true)
+
+    @ongoing_battles = Battle
+      .joins("LEFT JOIN fleets ON battles.id = fleets.battle_id")
+      .group("battles.id")
+      .having("COUNT(CASE WHEN fleets.is_approved = ? THEN 1 END) = 2", true)
+      .having("COUNT(CASE WHEN fleets.owner_uuid = ? AND fleets.is_approved = ? THEN 1 END) = 1",
+        session[:player_uuid], true)
   end
 
   def new

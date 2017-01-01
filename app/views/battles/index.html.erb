@@ -15,16 +15,23 @@
   </tr>
   <% end %>
 </table>
+
 <%= link_to "New Battle" , new_battle_path %>
 
 <h2>Ongoing battles</h2>
 <table>
   <tr>
+    <th>ID</th>
     <th>Battle</th>
+    <th>Configuration</th>
+    <th>Fleets</th>
   </tr>
   <% @ongoing_battles.each do |b| %>
   <tr>
-    <td></td>
+    <td><%= b.id %></td>
+    <td><%= link_to b.battle_name, battle_path(b.id) %></td>
+    <td><%= b.battle_configuration.configuration_name %></td>
+    <td><%= approved_fleets(b) %></td>
   </tr>
   <% end %>
 </table>

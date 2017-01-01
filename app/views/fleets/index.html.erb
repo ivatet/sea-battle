@@ -17,4 +17,4 @@
   <% end %>
 </table>
 
-<%= link_to "Create fleet", new_battle_fleet_path(@battle) unless @battle.approved_any? or is_fleet_created? %>
+<%= link_to "Create fleet", new_battle_fleet_path(@battle) unless @battle.joiner_approved? or is_fleet_created? %>
