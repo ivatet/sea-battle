@@ -32,7 +32,6 @@ module BattleHelper
   end
 
   def approved_fleets(battle)
-    f = battle.fleets.find_all { |f| f.is_approved }
-    "#{f.first.fleet_name} vs. #{f.last.fleet_name}"
+    battle.fleets.find_all { |f| f.is_approved }
   end
 end

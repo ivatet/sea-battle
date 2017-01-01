@@ -24,14 +24,16 @@
     <th>ID</th>
     <th>Battle</th>
     <th>Configuration</th>
-    <th>Fleets</th>
+    <th colspan="2">Fleets</th>
   </tr>
   <% @ongoing_battles.each do |b| %>
   <tr>
     <td><%= b.id %></td>
     <td><%= link_to b.battle_name, battle_path(b.id) %></td>
     <td><%= b.battle_configuration.configuration_name %></td>
-    <td><%= approved_fleets(b) %></td>
+    <% approved_fleets(b).each do |f| %>
+      <td><%= f.fleet_name %></td>
+    <% end %>
   </tr>
   <% end %>
 </table>
