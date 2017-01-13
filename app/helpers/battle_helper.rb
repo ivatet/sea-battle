@@ -12,9 +12,8 @@ module BattleHelper
 
   def battle_partial
     uuid = session[:player_uuid]
-    is_ongoing = @battle.fleets.many? { |f| f.is_approved }
-    if is_ongoing
-      is_player = @battle.fleets.find { |f| f.owner_uuid == uuid and f.is_approved }
+    if @battle.ongoing?
+      is_player = @battle.approved_fleets.find { |f| f.owner_uuid == uuid }
       if is_player then "ongoing_player" else "ongoing_guest" end
     else
       is_creator = @battle.creator_uuid == uuid

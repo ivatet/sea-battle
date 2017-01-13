@@ -49,6 +49,10 @@ class BattlesController < ApplicationController
 
   def show
     @battle = Battle.find(params[:id])
+
+    if @battle.ongoing?
+      fc = FleetConfig.new("a", 3)
+    end
   end
 
   def update
