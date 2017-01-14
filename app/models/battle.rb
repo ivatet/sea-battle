@@ -13,7 +13,7 @@ class Battle < ActiveRecord::Base
   end
 
   def ongoing?
-    fleets.count { |f| f.is_approved } > 1
+    approved_fleets.count > 1
   end
 
   def approved_fleets

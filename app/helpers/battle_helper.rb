@@ -11,22 +11,21 @@ module BattleHelper
   end
 
   def battle_partial
-    uuid = session[:player_uuid]
     if @battle.ongoing?
-      is_player = @battle.approved_fleets.find { |f| f.owner_uuid == uuid }
-      if is_player then "ongoing_player" else "ongoing_guest" end
+      if @battle.approved_fleets.find { |f| f.owner_uuid == session[:player_uuid] }
+        then "ongoing_player" else "ongoing_guest" end
     else
-      is_creator = @battle.creator_uuid == uuid
-      if is_creator then "blank_creator" else "blank_joiner" end
+      if @battle.creator_uuid == session[:player_uuid]
+        then "blank_creator" else "blank_joiner" end
     end
   end
 
   def link_to_create_fleet_partial
-    is_fleet_created = @battle.fleets.any? { |f| f.owner_uuid == session[:player_uuid] }
-    is_fleet_created ? "label_complete" : "link_to_create_fleet"
+    if @battle.fleets.any? { |f| f.owner_uuid == session[:player_uuid] }
+      then "label_complete" else "link_to_create_fleet" end
   end
 
   def link_to_approve_joiner_partial
-    @battle.joiner_approved? ? "label_complete" : "link_to_approve_joiner"
+    if @battle.joiner_approved? then "label_complete" else "link_to_approve_joiner" end
   end
 end

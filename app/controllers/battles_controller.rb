@@ -1,3 +1,5 @@
+require 'sea_battle'
+
 class BattlesController < ApplicationController
   def index
     @blank_battles = Battle
@@ -51,7 +53,9 @@ class BattlesController < ApplicationController
     @battle = Battle.find(params[:id])
 
     if @battle.ongoing?
-      fc = FleetConfig.new("a", 3)
+      fcs = @battle.approved_fleets.map do |f|
+        SeaBattle::FleetConfig.new(f.owner_uuid, f.fleet_json, f.shot_map_json)
+      end
     end
   end
 
